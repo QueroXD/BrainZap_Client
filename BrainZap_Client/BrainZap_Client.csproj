@@ -46,6 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CLASSES\ClGestorPartidaClient.cs" />
+    <Compile Include="CLASSES\ClJugador.cs" />
+    <Compile Include="CLASSES\ClSocketClient.cs" />
+    <Compile Include="CLASSES\ClUIManager.cs" />
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
