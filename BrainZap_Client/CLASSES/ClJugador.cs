@@ -6,8 +6,22 @@ using System.Threading.Tasks;
 
 namespace BrainZap_Client.CLASSES
 {
-    internal class ClJugador
+    public class ClJugador
     {
         //Representa al jugador local: nickname, puntuación.
+
+        public string username { get; set; }
+        public int puntos { get; set; }
+
+        public ClJugador(string nickname)
+        {
+            username = nickname;
+            puntos = 0;
+        }
+
+        public void sumarPuntos(int cont)
+        {
+            puntos += cont;
+        }
     }
 }
