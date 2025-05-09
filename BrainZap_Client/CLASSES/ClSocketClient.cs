@@ -12,7 +12,6 @@ namespace BrainZap_Client.CLASSES
         private Thread threadEscucha;
         private bool conectado = false;
 
-        // Evento para notificar llegada de mensajes
         public event Action<string> mensajeRecibido;
 
         public bool Conectado => conectado;
@@ -26,7 +25,6 @@ namespace BrainZap_Client.CLASSES
                 stream = cliente.GetStream();
                 conectado = true;
 
-                // Enviar el nickname justo después de conectar
                 enviarMensaje($"NICK|{nickname}");
 
                 threadEscucha = new Thread(escuchar);
@@ -37,7 +35,6 @@ namespace BrainZap_Client.CLASSES
             }
             catch (Exception ex)
             {
-                // Puedes loguearlo o notificar si quieres
                 return false;
             }
         }
@@ -48,12 +45,23 @@ namespace BrainZap_Client.CLASSES
             try
             {
                 byte[] buffer = new byte[1024];
-                int bytesLeidos;
 
-                while (conectado && (bytesLeidos = stream.Read(buffer, 0, buffer.Length)) > 0)
+                while (conectado)
                 {
+                    int bytesLeidos = stream.Read(buffer, 0, buffer.Length);
+
+                    if (bytesLeidos <= 0)
+                    {
+                        break;
+                    }
+
                     string mensaje = Encoding.UTF8.GetString(buffer, 0, bytesLeidos);
-                    mensajeRecibido?.Invoke(mensaje);
+
+                    foreach (string linea in mensaje.Split('\n'))
+                    {
+                        if (!string.IsNullOrWhiteSpace(linea))
+                            mensajeRecibido?.Invoke(linea.Trim());
+                    }
                 }
             }
             catch (Exception ex)
@@ -72,12 +80,12 @@ namespace BrainZap_Client.CLASSES
 
             try
             {
-                byte[] datos = Encoding.UTF8.GetBytes(mensaje);
+                byte[] datos = Encoding.UTF8.GetBytes(mensaje + "\n");
                 stream.Write(datos, 0, datos.Length);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al enviar mensaje: " + ex.Message);
+                desconectar();
             }
         }
 

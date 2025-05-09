@@ -49,11 +49,23 @@
     <Compile Include="CLASSES\ClGestorPartidaClient.cs" />
     <Compile Include="CLASSES\ClJugador.cs" />
     <Compile Include="CLASSES\ClSocketClient.cs" />
+    <Compile Include="FORMULARIOS\FrmFinal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMULARIOS\FrmFinal.Designer.cs">
+      <DependentUpon>FrmFinal.cs</DependentUpon>
+    </Compile>
     <Compile Include="FORMULARIOS\FrmPregunta.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FORMULARIOS\FrmPregunta.Designer.cs">
       <DependentUpon>FrmPregunta.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FORMULARIOS\FrmResultado.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMULARIOS\FrmResultado.Designer.cs">
+      <DependentUpon>FrmResultado.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
@@ -65,6 +77,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FORMULARIOS\FrmPregunta.resx">
       <DependentUpon>FrmPregunta.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMULARIOS\FrmResultado.resx">
+      <DependentUpon>FrmResultado.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>

@@ -19,21 +19,21 @@ namespace BrainZap_Client.FORMULARIOS
             this.jugador = jugador;
             this.socket = socket;
 
-            InicializarTimer();
+            inicializarTimer();
             socket.mensajeRecibido += onMensajeRecibido;
 
             // En caso de que la pregunta ya esté recibida al iniciar
             socket.solicitarPregunta();
         }
 
-        private void InicializarTimer()
+        private void inicializarTimer()
         {
             timer = new Timer();
             timer.Interval = 1000; // 1 segundo
-            timer.Tick += Timer_Tick;
+            timer.Tick += timer_Tick;
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void timer_Tick(object sender, EventArgs e)
         {
             tiempoRestante--;
             pbTiempo.Value = Math.Max(0, tiempoRestante * 100 / 15);
@@ -88,11 +88,7 @@ namespace BrainZap_Client.FORMULARIOS
         private void enviarRespuesta(int indice)
         {
             socket.enviarMensaje($"RESPUESTA|{indice}");
-            // Cambiar a formulario de resultado
-            //FrmResultado frmResultado = new FrmResultado(jugador, socket);
-            //frmResultado.FormClosed += (s, e) => this.Close();
-            //this.Hide();
-            //frmResultado.Show();
+            bloquearRespuestas();
         }
 
         private void btnResp1_Click(object sender, EventArgs e)

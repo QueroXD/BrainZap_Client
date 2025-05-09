@@ -10,8 +10,8 @@ namespace BrainZap_Client.CLASSES
     {
         //Representa al jugador local: nickname, puntuación.
 
-        public string username { get; set; }
-        public int puntos { get; set; }
+        public string username { get; private set; }
+        public int puntos { get; private set; }
 
         public ClJugador(string nickname)
         {
@@ -23,5 +23,15 @@ namespace BrainZap_Client.CLASSES
         {
             puntos += cont;
         }
+
+        /*public void reiniciarPuntos()
+        {
+            puntos = 0;
+        }
+
+        public override string ToString()
+        {
+            return $"{username} - {puntos} pts";
+        }*/
     }
 }
