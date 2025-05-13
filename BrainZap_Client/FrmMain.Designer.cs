@@ -1,4 +1,8 @@
-﻿namespace BrainZap_Client
+﻿using System.Drawing;
+using System.Windows.Forms;
+using System;
+
+namespace BrainZap_Client
 {
     partial class FrmMain
     {
@@ -42,99 +46,124 @@
             // lbTitulo
             // 
             this.lbTitulo.AutoSize = true;
-            this.lbTitulo.Font = new System.Drawing.Font("Microsoft Sans Serif", 28.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTitulo.Location = new System.Drawing.Point(281, 88);
+            this.lbTitulo.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Bold);
+            this.lbTitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.lbTitulo.Location = new System.Drawing.Point(250, 40);
             this.lbTitulo.Name = "lbTitulo";
-            this.lbTitulo.Size = new System.Drawing.Size(221, 54);
+            this.lbTitulo.Size = new System.Drawing.Size(287, 81);
             this.lbTitulo.TabIndex = 0;
             this.lbTitulo.Text = "BrainZap";
             // 
             // lbNickname
             // 
             this.lbNickname.AutoSize = true;
-            this.lbNickname.Location = new System.Drawing.Point(287, 161);
+            this.lbNickname.Location = new System.Drawing.Point(220, 140);
             this.lbNickname.Name = "lbNickname";
-            this.lbNickname.Size = new System.Drawing.Size(68, 16);
+            this.lbNickname.Size = new System.Drawing.Size(86, 23);
             this.lbNickname.TabIndex = 1;
             this.lbNickname.Text = "Nickname";
             // 
             // lbIp
             // 
             this.lbIp.AutoSize = true;
-            this.lbIp.Location = new System.Drawing.Point(287, 195);
+            this.lbIp.Location = new System.Drawing.Point(220, 180);
             this.lbIp.Name = "lbIp";
-            this.lbIp.Size = new System.Drawing.Size(19, 16);
-            this.lbIp.TabIndex = 2;
+            this.lbIp.Size = new System.Drawing.Size(25, 23);
+            this.lbIp.TabIndex = 3;
             this.lbIp.Text = "IP";
             // 
             // tbNickname
             // 
-            this.tbNickname.Location = new System.Drawing.Point(361, 158);
+            this.tbNickname.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.tbNickname.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbNickname.ForeColor = System.Drawing.Color.White;
+            this.tbNickname.Location = new System.Drawing.Point(320, 135);
             this.tbNickname.Name = "tbNickname";
-            this.tbNickname.Size = new System.Drawing.Size(141, 22);
-            this.tbNickname.TabIndex = 3;
+            this.tbNickname.Size = new System.Drawing.Size(250, 30);
+            this.tbNickname.TabIndex = 2;
+            this.tbNickname.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // tbIp
             // 
-            this.tbIp.Location = new System.Drawing.Point(312, 189);
+            this.tbIp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.tbIp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbIp.ForeColor = System.Drawing.Color.White;
+            this.tbIp.Location = new System.Drawing.Point(320, 175);
             this.tbIp.Name = "tbIp";
-            this.tbIp.Size = new System.Drawing.Size(190, 22);
+            this.tbIp.Size = new System.Drawing.Size(250, 30);
             this.tbIp.TabIndex = 4;
+            this.tbIp.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // btConectar
             // 
-            this.btConectar.Location = new System.Drawing.Point(339, 248);
+            this.btConectar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.btConectar.FlatAppearance.BorderSize = 0;
+            this.btConectar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btConectar.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.btConectar.ForeColor = System.Drawing.Color.White;
+            this.btConectar.Location = new System.Drawing.Point(320, 270);
             this.btConectar.Name = "btConectar";
-            this.btConectar.Size = new System.Drawing.Size(111, 40);
-            this.btConectar.TabIndex = 5;
+            this.btConectar.Size = new System.Drawing.Size(150, 45);
+            this.btConectar.TabIndex = 8;
             this.btConectar.Text = "Conectar";
-            this.btConectar.UseVisualStyleBackColor = true;
+            this.btConectar.UseVisualStyleBackColor = false;
             this.btConectar.Click += new System.EventHandler(this.btConectar_Click);
             // 
             // lbPuerto
             // 
             this.lbPuerto.AutoSize = true;
-            this.lbPuerto.Location = new System.Drawing.Point(287, 223);
+            this.lbPuerto.Location = new System.Drawing.Point(220, 220);
             this.lbPuerto.Name = "lbPuerto";
-            this.lbPuerto.Size = new System.Drawing.Size(46, 16);
-            this.lbPuerto.TabIndex = 6;
+            this.lbPuerto.Size = new System.Drawing.Size(61, 23);
+            this.lbPuerto.TabIndex = 5;
             this.lbPuerto.Text = "Puerto";
             // 
             // tbPuerto
             // 
-            this.tbPuerto.Location = new System.Drawing.Point(339, 220);
+            this.tbPuerto.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.tbPuerto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbPuerto.ForeColor = System.Drawing.Color.White;
+            this.tbPuerto.Location = new System.Drawing.Point(320, 215);
             this.tbPuerto.Name = "tbPuerto";
-            this.tbPuerto.Size = new System.Drawing.Size(71, 22);
-            this.tbPuerto.TabIndex = 7;
+            this.tbPuerto.Size = new System.Drawing.Size(100, 30);
+            this.tbPuerto.TabIndex = 6;
+            this.tbPuerto.Text = "5000";
+            this.tbPuerto.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // lbEstado
             // 
             this.lbEstado.AutoSize = true;
-            this.lbEstado.Location = new System.Drawing.Point(416, 223);
+            this.lbEstado.Location = new System.Drawing.Point(430, 220);
             this.lbEstado.Name = "lbEstado";
-            this.lbEstado.Size = new System.Drawing.Size(0, 16);
-            this.lbEstado.TabIndex = 8;
+            this.lbEstado.Size = new System.Drawing.Size(0, 23);
+            this.lbEstado.TabIndex = 7;
             // 
             // FrmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(36)))), ((int)(((byte)(49)))));
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.lbEstado);
-            this.Controls.Add(this.tbPuerto);
-            this.Controls.Add(this.lbPuerto);
-            this.Controls.Add(this.btConectar);
-            this.Controls.Add(this.tbIp);
+            this.Controls.Add(this.lbTitulo);
+            this.Controls.Add(this.lbNickname);
             this.Controls.Add(this.tbNickname);
             this.Controls.Add(this.lbIp);
-            this.Controls.Add(this.lbNickname);
-            this.Controls.Add(this.lbTitulo);
+            this.Controls.Add(this.tbIp);
+            this.Controls.Add(this.lbPuerto);
+            this.Controls.Add(this.tbPuerto);
+            this.Controls.Add(this.lbEstado);
+            this.Controls.Add(this.btConectar);
+            this.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.ForeColor = System.Drawing.Color.White;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FrmMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "BrainZap";
+            this.Load += new System.EventHandler(this.FrmMain_Load);
+            this.Resize += new System.EventHandler(this.FrmMain_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
+
 
         #endregion
 

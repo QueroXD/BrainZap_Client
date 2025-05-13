@@ -21,6 +21,7 @@ namespace BrainZap_Client
         public FrmMain()
         {
             InitializeComponent();
+
             socket = new ClSocketClient();
             socket.iniciarEscucha();
         }
@@ -65,6 +66,40 @@ namespace BrainZap_Client
                 frmPregunta.FormClosed += (s, args) => this.Close();
                 frmPregunta.Show();
             }));
+        }
+
+        private void responsiveForm()
+        {
+            int formCenterX = this.ClientSize.Width / 2;
+
+            // Posicionar el título
+            lbTitulo.Location = new Point(formCenterX - lbTitulo.Width / 2, 40);
+
+            // Posiciones relativas centradas
+            int centerInputsX = formCenterX - tbNickname.Width / 2;
+
+            lbNickname.Location = new Point(centerInputsX, 130);
+            tbNickname.Location = new Point(centerInputsX, 155);
+
+            lbIp.Location = new Point(centerInputsX, 195);
+            tbIp.Location = new Point(centerInputsX, 220);
+
+            lbPuerto.Location = new Point(centerInputsX, 260);
+            tbPuerto.Location = new Point(centerInputsX, 285);
+
+            lbEstado.Location = new Point(centerInputsX + tbPuerto.Width + 10, 290);
+
+            btConectar.Location = new Point(formCenterX - btConectar.Width / 2, 340);
+        }
+
+        private void FrmMain_Load(object sender, EventArgs e)
+        {
+            responsiveForm();
+        }
+
+        private void FrmMain_Resize(object sender, EventArgs e)
+        {
+            responsiveForm();
         }
     }
 }
