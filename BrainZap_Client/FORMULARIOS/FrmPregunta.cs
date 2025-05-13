@@ -10,7 +10,8 @@ namespace BrainZap_Client.FORMULARIOS
         private ClJugador jugador;
         private ClSocketClient socket;
         private string[] respuestas = new string[4];
-        private int tiempoRestante = 30;
+        private const int tiempoMaximo = 30;
+        private int tiempoRestante = tiempoMaximo;
         private Timer timer;
 
         public FrmPregunta(ClJugador jugador, ClSocketClient socket)
@@ -20,10 +21,7 @@ namespace BrainZap_Client.FORMULARIOS
             this.socket = socket;
 
             inicializarTimer();
-            socket.mensajeRecibido += onMensajeRecibido;
-
-            // En caso de que la pregunta ya esté recibida al iniciar
-            socket.solicitarPregunta();
+            socket.PreguntaRecibida += onMensajeRecibido;
         }
 
         private void inicializarTimer()
@@ -36,7 +34,7 @@ namespace BrainZap_Client.FORMULARIOS
         private void timer_Tick(object sender, EventArgs e)
         {
             tiempoRestante--;
-            pbTiempo.Value = Math.Max(0, tiempoRestante * 100 / 15);
+            pbTiempo.Value = Math.Max(0, tiempoRestante);
 
             if (tiempoRestante <= 0)
             {
@@ -59,6 +57,8 @@ namespace BrainZap_Client.FORMULARIOS
 
         private void mostrarPregunta(string mensaje)
         {
+            if (!this.Visible) { this.Show(); }
+
             string[] partes = mensaje.Split('|');
             if (partes.Length == 6)
             {
@@ -74,8 +74,12 @@ namespace BrainZap_Client.FORMULARIOS
                 btnResp4.Text = respuestas[3];
 
                 btnResp1.Enabled = btnResp2.Enabled = btnResp3.Enabled = btnResp4.Enabled = true;
-                tiempoRestante = 30;
-                pbTiempo.Value = 100;
+
+                tiempoRestante = tiempoMaximo;
+                pbTiempo.Minimum = 0;
+                pbTiempo.Maximum = tiempoMaximo;
+                pbTiempo.Value = tiempoMaximo;
+
                 timer.Start();
             }
         }
@@ -87,7 +91,8 @@ namespace BrainZap_Client.FORMULARIOS
 
         private void enviarRespuesta(int indice)
         {
-            socket.enviarMensaje($"RESPUESTA|{indice}");
+            string respuesta = (indice >= 0 && indice < respuestas.Length) ? respuestas[indice] : "SINRESPUESTA";
+            socket.enviarMensaje($"RESPUESTA|{jugador.username}|{lbPregunta.Text}|{respuesta}");
             bloquearRespuestas();
         }
 

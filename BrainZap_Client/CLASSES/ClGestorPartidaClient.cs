@@ -20,36 +20,21 @@ namespace BrainZap_Client.GESTORES
             this.jugador = jugador;
 
             // Suscripción al evento de mensajes entrantes
-            socket.mensajeRecibido += onMensajeRecibido;
+            socket.ResultadoRecibido += mostrarResultado;
+            socket.FinPartidaRecibido += mostrarPantallaFinal;
         }
 
         public void iniciar()
         {
             frmPregunta = new FrmPregunta(jugador, socket);
             frmPregunta.FormClosed += (s, e) => Application.Exit(); // Cierra todo al cerrar ventana de juego
-            frmPregunta.Show();
-        }
-
-        private void onMensajeRecibido(string mensaje)
-        {
-            if (mensaje.StartsWith("PREGUNTA|"))
-            {
-                // La FrmPregunta ya se encarga de mostrarla, no hace falta intervenir aquí.
-            }
-            else if (mensaje.StartsWith("RESULTADO|"))
-            {
-                mostrarResultado(mensaje);
-            }
-            else if (mensaje.StartsWith("FINPARTIDA|"))
-            {
-                mostrarPantallaFinal(mensaje);
-            }
         }
 
         private void mostrarResultado(string mensaje)
         {
             // Formato: RESULTADO|1|500|Juan:1500,Laura:1200,Pedro:1000
             string[] partes = mensaje.Split('|');
+
             if (partes.Length >= 4)
             {
                 bool acertada = partes[1] == "1";

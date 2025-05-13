@@ -43,11 +43,12 @@ namespace BrainZap_Client
             jugador = new ClJugador(nickname);
             socket = new ClSocketClient();
 
-            bool conectado = socket.conectar(ip, puerto, nickname);
+            bool conectado = socket.conectar(nickname, ip, puerto);
+
             if (conectado)
             {
                 lbEstado.Text = "Conectado correctamente.";
-                abrirFrmPregunta();
+                socket.PreguntaRecibida += onPreguntaRecibida;
             }
             else
             {
@@ -55,12 +56,16 @@ namespace BrainZap_Client
             }
         }
 
-        private void abrirFrmPregunta()
+        private void onPreguntaRecibida(string mensaje)
         {
-            this.Hide();
-            FrmPregunta frmPregunta = new FrmPregunta(jugador, socket);
-            frmPregunta.FormClosed += (s, args) => this.Close();
-            frmPregunta.Show();
+            // Aquí es donde se muestra el formulario de pregunta cuando se recibe la pregunta
+            this.Invoke(new Action(() =>
+            {
+                this.Hide();
+                FrmPregunta frmPregunta = new FrmPregunta(jugador, socket);
+                frmPregunta.FormClosed += (s, args) => this.Close();
+                frmPregunta.Show();
+            }));
         }
     }
 }

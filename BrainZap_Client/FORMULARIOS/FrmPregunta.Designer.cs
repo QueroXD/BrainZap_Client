@@ -97,9 +97,12 @@
             // pbTiempo
             // 
             this.pbTiempo.Location = new System.Drawing.Point(50, 380);
+            this.pbTiempo.Maximum = 30;
             this.pbTiempo.Name = "pbTiempo";
             this.pbTiempo.Size = new System.Drawing.Size(700, 23);
+            this.pbTiempo.Step = 1;
             this.pbTiempo.TabIndex = 5;
+            this.pbTiempo.Value = 30;
             // 
             // FrmPregunta
             // 
