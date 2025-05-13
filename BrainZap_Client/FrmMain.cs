@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -20,6 +21,8 @@ namespace BrainZap_Client
         public FrmMain()
         {
             InitializeComponent();
+            socket = new ClSocketClient();
+            socket.iniciarEscucha();
         }
 
         private void btConectar_Click(object sender, EventArgs e)
@@ -31,17 +34,14 @@ namespace BrainZap_Client
             if (string.IsNullOrEmpty(ip) || string.IsNullOrEmpty(puertoStr) || string.IsNullOrEmpty(nickname))
             {
                 MessageBox.Show("Completa todos los campos.");
-                return;
             }
 
             if (!int.TryParse(puertoStr, out int puerto))
             {
                 MessageBox.Show("El puerto debe ser un número válido.");
-                return;
             }
 
             jugador = new ClJugador(nickname);
-            socket = new ClSocketClient();
 
             bool conectado = socket.conectar(nickname, ip, puerto);
 
@@ -58,7 +58,6 @@ namespace BrainZap_Client
 
         private void onPreguntaRecibida(string mensaje)
         {
-            // Aquí es donde se muestra el formulario de pregunta cuando se recibe la pregunta
             this.Invoke(new Action(() =>
             {
                 this.Hide();

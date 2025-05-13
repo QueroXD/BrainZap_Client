@@ -27,7 +27,7 @@ namespace BrainZap_Client.FORMULARIOS
         private void inicializarTimer()
         {
             timer = new Timer();
-            timer.Interval = 1000; // 1 segundo
+            timer.Interval = 1000;
             timer.Tick += timer_Tick;
         }
 
@@ -46,7 +46,7 @@ namespace BrainZap_Client.FORMULARIOS
 
         private void onMensajeRecibido(string mensaje)
         {
-            if (mensaje.StartsWith("PREGUNTA"))
+            if (mensaje.StartsWith("PREGUNTA|"))
             {
                 Invoke(new Action(() =>
                 {

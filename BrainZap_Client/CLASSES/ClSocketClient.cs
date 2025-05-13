@@ -9,6 +9,7 @@ namespace BrainZap_Client.CLASSES
 {
     public class ClSocketClient
     {
+        private TcpListener servidorLocal;
         private TcpClient cliente;
         private NetworkStream stream;
         private Thread threadEscucha;
@@ -20,6 +21,23 @@ namespace BrainZap_Client.CLASSES
 
         public bool Conectado => conectado;
 
+        public void iniciarEscucha()
+        {
+            try
+            {
+                servidorLocal = new TcpListener(IPAddress.Any, 5555);
+                servidorLocal.Start();
+
+                threadEscucha = new Thread(escuchar);
+                threadEscucha.IsBackground = true;
+                threadEscucha.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al iniciar escucha: {ex.Message}");
+            }
+        }
+
         public bool conectar(string nickname, string ip, int puerto)
         {
             try
@@ -27,18 +45,21 @@ namespace BrainZap_Client.CLASSES
                 cliente = new TcpClient();
                 cliente.Connect(ip, puerto);
                 stream = cliente.GetStream();
+
                 conectado = true;
 
                 enviarMensaje($"NICK|{nickname}|{obtenerIPLocal()}|5555");
 
-                threadEscucha = new Thread(escuchar);
-                threadEscucha.IsBackground = true;
-                threadEscucha.Start();
-
                 return true;
+            }
+            catch (SocketException ex)
+            {
+                MessageBox.Show($"Error de conexión: {ex.Message}");
+                return false;
             }
             catch (Exception ex)
             {
+                MessageBox.Show($"Error: {ex.Message}");
                 return false;
             }
         }
@@ -60,20 +81,25 @@ namespace BrainZap_Client.CLASSES
             {
                 byte[] buffer = new byte[1024];
 
-                while (conectado)
-                {    
-                    recibirMensaje(buffer);
+                while (true)
+                {
+                    if (servidorLocal.Pending())
+                    {
+                        TcpClient clienteLocal = servidorLocal.AcceptTcpClient();  // Aceptamos la conexión
+                        NetworkStream streamLocal = clienteLocal.GetStream();  // Obtenemos el stream
+
+                        recibirMensaje(streamLocal, buffer);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                gestionarMensaje("ERROR|" + ex.Message);
+                Console.WriteLine($"Error al escuchar: {ex.Message}");
             }
         }
 
         public void enviarMensaje(string mensaje)
         {
-            // utilizar el gestionarMensaje para saber que mensaje enviar al servidor
             try
             {
                 byte[] datos = Encoding.UTF8.GetBytes(mensaje + "\n");
@@ -84,29 +110,33 @@ namespace BrainZap_Client.CLASSES
             }
         }
 
-        public void recibirMensaje(byte[] buffer)
+        public void recibirMensaje(NetworkStream stream, byte[] buffer)
         {
-            // Utilizar el gestionarMensaje para procesar el mensaje recibido
-            int bytesLeidos = stream.Read(buffer, 0, buffer.Length);
-
-            if (bytesLeidos > 0)
+            try
             {
-                string mensaje = Encoding.UTF8.GetString(buffer, 0, bytesLeidos);
+                int bytesLeidos = stream.Read(buffer, 0, buffer.Length);  // Leemos del stream
 
-                foreach (string linea in mensaje.Split('\n'))
+                if (bytesLeidos > 0)
                 {
-                    if (!string.IsNullOrWhiteSpace(linea))
+                    string mensaje = Encoding.UTF8.GetString(buffer, 0, bytesLeidos);
+                    foreach (string linea in mensaje.Split('\n'))
                     {
-                        gestionarMensaje(linea.Trim());
+                        if (!string.IsNullOrWhiteSpace(linea))
+                        {
+                            gestionarMensaje(linea.Trim());
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al recibir mensaje: {ex.Message}");
             }
         }
 
         private void gestionarMensaje(string mensaje)
         {
             // MENSAJE RECIBIDO: "NICK|nick|OK o NICK|nick|ERROR"
-            // si llega nick OK se espera que llegue la pregunta del servidor, si llega ERROR aparece un messageBox diciendo que el nick ya está en uso. Y se vuelve a pedir el nick.
 
             if (mensaje.StartsWith("NICK|"))
             {
@@ -125,7 +155,6 @@ namespace BrainZap_Client.CLASSES
             }
 
             // Segundo MENSAJE RECIBIDO: "PREGUNTA|pregunta|opcion1|opcion2|opcion3|opcion4"
-            // si llega pregunta se muestra la pregunta y las opciones en el formulario de pregunta.
             // Ahora mandamos la respuesta al servidor: "RESPUESTA|nick|pregunta|respuesta"
 
             else if (mensaje.StartsWith("PREGUNTA|"))
@@ -135,8 +164,6 @@ namespace BrainZap_Client.CLASSES
 
 
             // Tercer MENSAJE RECIBIDO: "RESULTADO|nick|respuesta|puntos|nick1:puntos1,nick2:puntos2,nick3:puntos3"
-            // si llega resultado se muestra el resultado en el formulario de resultado.
-            // si llega respuesta correcta el frmPregunta tiene que gestionar que el fondo sea verde y salga que has respondido bien, si llega respuesta incorrecta tiene que gestionar que el fondo sea rojo y que salga que has respondido mal.
 
             else if (mensaje.StartsWith("RESULTADO|"))
             {
@@ -144,13 +171,11 @@ namespace BrainZap_Client.CLASSES
             }
 
             // Cuarto MENSAJE RECIBIDO: "FINPARTIDA|nick1:puntos1,nick2:puntos2,nick3:puntos3"
-            // si llega fin de partida se muestra el formulario de fin de partida con los puntos finales de cada jugador.
 
             else if (mensaje.StartsWith("FINPARTIDA|"))
             {
                 FinPartidaRecibido?.Invoke(mensaje);
             }
-
             else if (mensaje.StartsWith("ERROR|"))
             {
                 MessageBox.Show("Error: " + mensaje);
