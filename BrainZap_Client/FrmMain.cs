@@ -17,6 +17,7 @@ namespace BrainZap_Client
     {
         public ClSocketClient socket;
         public ClJugador jugador;
+        private FrmPregunta frmPregunta;
 
         public FrmMain()
         {
@@ -24,6 +25,7 @@ namespace BrainZap_Client
 
             socket = new ClSocketClient();
             socket.iniciarEscucha();
+            socket.PreguntaRecibida += onPreguntaRecibida;
         }
 
         private void btConectar_Click(object sender, EventArgs e)
@@ -49,7 +51,6 @@ namespace BrainZap_Client
             if (conectado)
             {
                 lbEstado.Text = "Conectado correctamente.";
-                socket.PreguntaRecibida += onPreguntaRecibida;
             }
             else
             {
@@ -61,10 +62,13 @@ namespace BrainZap_Client
         {
             this.Invoke(new Action(() =>
             {
-                this.Hide();
-                FrmPregunta frmPregunta = new FrmPregunta(jugador, socket);
-                frmPregunta.FormClosed += (s, args) => this.Close();
-                frmPregunta.Show();
+                if (frmPregunta == null || frmPregunta.IsDisposed)
+                {
+                    this.Hide();
+                    frmPregunta = new FrmPregunta(jugador, socket, mensaje); // Pasamos la pregunta que ya llegó
+                    frmPregunta.FormClosed += (s, args) => this.Close();
+                    frmPregunta.Show();
+                }
             }));
         }
 

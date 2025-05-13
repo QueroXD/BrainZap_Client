@@ -14,7 +14,7 @@ namespace BrainZap_Client.FORMULARIOS
         private int tiempoRestante = tiempoMaximo;
         private Timer timer;
 
-        public FrmPregunta(ClJugador jugador, ClSocketClient socket)
+        public FrmPregunta(ClJugador jugador, ClSocketClient socket, string mensajeInicial = null)
         {
             InitializeComponent();
             this.jugador = jugador;
@@ -22,7 +22,13 @@ namespace BrainZap_Client.FORMULARIOS
 
             inicializarTimer();
             socket.PreguntaRecibida += onMensajeRecibido;
+
+            if (!string.IsNullOrEmpty(mensajeInicial))
+            {
+                mostrarPregunta(mensajeInicial); // Muestra la pregunta que llegó antes de crear el formulario
+            }
         }
+
 
         private void inicializarTimer()
         {
@@ -39,7 +45,7 @@ namespace BrainZap_Client.FORMULARIOS
             if (tiempoRestante <= 0)
             {
                 timer.Stop();
-                bloquearRespuestas();
+                bloquearRespuestas(-1);
                 enviarRespuesta(-1); // No respondió
             }
         }
@@ -84,22 +90,41 @@ namespace BrainZap_Client.FORMULARIOS
             }
         }
 
-        private void bloquearRespuestas()
+        private void bloquearRespuestas(int respSeleccionada)
         {
-            btnResp1.Enabled = btnResp2.Enabled = btnResp3.Enabled = btnResp4.Enabled = false;
+            if (respSeleccionada == 1)
+            {
+                btnResp1.Enabled = false;
+                btnResp2.BackColor = btnResp3.BackColor = btnResp4.BackColor = Color.Gray;
+            } else if (respSeleccionada == 2)
+            {
+                btnResp2.Enabled = false;
+                btnResp1.BackColor = btnResp3.BackColor = btnResp4.BackColor = Color.Gray;
+            } else if( respSeleccionada == 3)
+            {
+                btnResp3.Enabled = false;
+                btnResp1.BackColor = btnResp2.BackColor = btnResp4.BackColor = Color.Gray;
+            } else if (respSeleccionada == 4)
+            {
+                btnResp4.Enabled = false;
+                btnResp1.BackColor = btnResp2.BackColor = btnResp3.BackColor = Color.Gray;
+            }
+            else
+            {
+                btnResp1.Enabled = btnResp2.Enabled = btnResp3.Enabled = btnResp4.Enabled = false;
+                btnResp1.BackColor = btnResp2.BackColor = btnResp3.BackColor = btnResp4.BackColor = Color.Gray;
+            }
         }
 
         private void enviarRespuesta(int indice)
         {
             string respuesta = (indice >= 0 && indice < respuestas.Length) ? respuestas[indice] : "SINRESPUESTA";
             socket.enviarMensaje($"RESPUESTA|{jugador.username}|{lbPregunta.Text}|{respuesta}");
-            bloquearRespuestas();
         }
 
         private void btnResp1_Click(object sender, EventArgs e)
         {
             timer.Stop();
-            bloquearRespuestas();
 
             Button boton = sender as Button;
             int respSeleccionada = -1;
@@ -108,6 +133,8 @@ namespace BrainZap_Client.FORMULARIOS
             else if (boton == btnResp2) respSeleccionada = 1;
             else if (boton == btnResp3) respSeleccionada = 2;
             else if (boton == btnResp4) respSeleccionada = 3;
+
+            bloquearRespuestas(respSeleccionada);
 
             enviarRespuesta(respSeleccionada);
         }
