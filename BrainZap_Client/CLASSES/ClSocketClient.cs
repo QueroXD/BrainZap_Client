@@ -1,5 +1,4 @@
-﻿using BrainZap_Client.GESTORES;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -115,7 +114,7 @@ namespace BrainZap_Client.CLASSES
         {
             try
             {
-                int bytesLeidos = stream.Read(buffer, 0, buffer.Length);  // Leemos del stream
+                int bytesLeidos = stream.Read(buffer, 0, buffer.Length);
 
                 if (bytesLeidos > 0)
                 {

@@ -76,10 +76,8 @@ namespace BrainZap_Client
         {
             int formCenterX = this.ClientSize.Width / 2;
 
-            // Posicionar el título
             lbTitulo.Location = new Point(formCenterX - lbTitulo.Width / 2, 40);
 
-            // Posiciones relativas centradas
             int centerInputsX = formCenterX - tbNickname.Width / 2;
 
             lbNickname.Location = new Point(centerInputsX, 130);

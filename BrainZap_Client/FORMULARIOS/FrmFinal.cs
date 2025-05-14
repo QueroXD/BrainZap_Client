@@ -51,7 +51,7 @@ namespace BrainZap_Client.FORMULARIOS
         private void btnCerrar_Click(object sender, EventArgs e)
         {
             socket?.desconectar();
-            Application.Exit(); // O volver a FrmMain si lo prefieres
+            Application.Exit();
         }
     }
 }

@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CLASSES\ClGestorPartidaClient.cs" />
     <Compile Include="CLASSES\ClJugador.cs" />
     <Compile Include="CLASSES\ClSocketClient.cs" />
     <Compile Include="FORMULARIOS\FrmFinal.cs">
@@ -75,6 +74,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FORMULARIOS\FrmFinal.resx">
+      <DependentUpon>FrmFinal.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FORMULARIOS\FrmPregunta.resx">
       <DependentUpon>FrmPregunta.cs</DependentUpon>
     </EmbeddedResource>

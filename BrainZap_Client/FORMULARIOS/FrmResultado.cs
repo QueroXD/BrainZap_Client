@@ -42,14 +42,6 @@ namespace BrainZap_Client.FORMULARIOS
             // Mostrar puntos ganados
             lblPuntos.Text = $"+{puntosGanados} puntos";
 
-            //// Mostrar top 3 si disponible
-            //if (top3.Length >= 3)
-            //{
-            //    lblTop1.Text = formatearJugador(top3[0]);
-            //    lblTop2.Text = formatearJugador(top3[1]);
-            //    lblTop3.Text = formatearJugador(top3[2]);
-            //}
-
             if (top3.Length > 0)
             {
                 for (int i = 0; i < top3.Length; i++)

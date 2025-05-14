@@ -183,7 +183,6 @@ namespace BrainZap_Client.FORMULARIOS
 
                     this.Hide(); // Ocultamos FrmPregunta mientras se ve el resultado
                     frmResultadoActual.Show();
-
                 }
             }));
         }

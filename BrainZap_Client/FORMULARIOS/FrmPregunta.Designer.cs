@@ -117,6 +117,7 @@
             this.Controls.Add(this.btnResp1);
             this.Controls.Add(this.lbPregunta);
             this.Name = "FrmPregunta";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Pregunta";
             this.ResumeLayout(false);
 
