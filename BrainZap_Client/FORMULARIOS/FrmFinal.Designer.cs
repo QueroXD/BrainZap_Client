@@ -69,7 +69,7 @@
             this.lblTop1.Name = "lblTop1";
             this.lblTop1.Size = new System.Drawing.Size(500, 40);
             this.lblTop1.TabIndex = 0;
-            this.lblTop1.Text = "🥇 Juan - 4500 pts";
+            this.lblTop1.Text = "🥇 ";
             this.lblTop1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblTop2
@@ -80,7 +80,7 @@
             this.lblTop2.Name = "lblTop2";
             this.lblTop2.Size = new System.Drawing.Size(500, 30);
             this.lblTop2.TabIndex = 1;
-            this.lblTop2.Text = "🥈 Laura - 4000 pts";
+            this.lblTop2.Text = "🥈 ";
             this.lblTop2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblTop3
@@ -91,7 +91,7 @@
             this.lblTop3.Name = "lblTop3";
             this.lblTop3.Size = new System.Drawing.Size(500, 30);
             this.lblTop3.TabIndex = 2;
-            this.lblTop3.Text = "🥉 Pedro - 3900 pts";
+            this.lblTop3.Text = "🥉";
             this.lblTop3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnCerrar

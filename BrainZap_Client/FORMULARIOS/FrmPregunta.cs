@@ -14,7 +14,7 @@ namespace BrainZap_Client.FORMULARIOS
         private int tiempoRestante = tiempoMaximo;
         private Timer timer;
         private FrmResultado frmResultadoActual;
-
+        private FrmFinal frmFinal;
 
         public FrmPregunta(ClJugador jugador, ClSocketClient socket, string mensajeInicial = null)
         {
@@ -25,6 +25,7 @@ namespace BrainZap_Client.FORMULARIOS
             inicializarTimer();
             socket.PreguntaRecibida += onMensajeRecibido;
             socket.ResultadoRecibido += onResultadoRecibido;
+            socket.FinPartidaRecibido += onFinPartidaRecibido;
 
             if (!string.IsNullOrEmpty(mensajeInicial))
             {
@@ -184,6 +185,20 @@ namespace BrainZap_Client.FORMULARIOS
                     this.Hide(); // Ocultamos FrmPregunta mientras se ve el resultado
                     frmResultadoActual.Show();
                 }
+            }));
+        }
+
+        private void onFinPartidaRecibido(string mensaje)
+        {
+            // Formato: FINPARTIDA|nick1:puntos1,nick2:puntos2,nick3:puntos3
+            string[] top3 = mensaje.Replace("FINPARTIDA|", "").Split(',');
+
+            frmResultadoActual?.Invoke(new Action(() =>
+            {
+                this.Hide(); // Ocultamos FrmPregunta
+                frmFinal = new FrmFinal(socket, top3); // Creando el formulario de fin de partida
+                frmFinal.FormClosed += (s, e) => Application.Exit(); // Al cerrar el formulario de fin de partida, cerramos la aplicación
+                frmFinal.Show(); // Mostramos el formulario de fin de partida
             }));
         }
 
