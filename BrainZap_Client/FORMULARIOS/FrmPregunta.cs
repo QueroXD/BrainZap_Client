@@ -13,6 +13,8 @@ namespace BrainZap_Client.FORMULARIOS
         private const int tiempoMaximo = 30;
         private int tiempoRestante = tiempoMaximo;
         private Timer timer;
+        private FrmResultado frmResultadoActual;
+
 
         public FrmPregunta(ClJugador jugador, ClSocketClient socket, string mensajeInicial = null)
         {
@@ -22,6 +24,7 @@ namespace BrainZap_Client.FORMULARIOS
 
             inicializarTimer();
             socket.PreguntaRecibida += onMensajeRecibido;
+            socket.ResultadoRecibido += onResultadoRecibido;
 
             if (!string.IsNullOrEmpty(mensajeInicial))
             {
@@ -56,13 +59,21 @@ namespace BrainZap_Client.FORMULARIOS
             {
                 Invoke(new Action(() =>
                 {
-                    mostrarPregunta(mensaje);
+                    // Cerramos el FrmResultado si está abierto
+                    if (frmResultadoActual != null && !frmResultadoActual.IsDisposed)
+                    {
+                        frmResultadoActual.Close();
+                        frmResultadoActual = null;
+                    }
+
+                    mostrarPregunta(mensaje); // Mostrar nueva pregunta
                 }));
             }
         }
 
         private void mostrarPregunta(string mensaje)
         {
+            desbloquearRespuestas();
             if (!this.Visible) { this.Show(); }
 
             string[] partes = mensaje.Split('|');
@@ -92,21 +103,23 @@ namespace BrainZap_Client.FORMULARIOS
 
         private void bloquearRespuestas(int respSeleccionada)
         {
-            if (respSeleccionada == 1)
+            btnResp1.Enabled = btnResp2.Enabled = btnResp3.Enabled = btnResp4.Enabled = false;
+
+            if (respSeleccionada == 0)
             {
-                btnResp1.Enabled = false;
+                btnResp1.ForeColor = Color.White;
                 btnResp2.BackColor = btnResp3.BackColor = btnResp4.BackColor = Color.Gray;
-            } else if (respSeleccionada == 2)
+            } else if (respSeleccionada == 1)
             {
-                btnResp2.Enabled = false;
+                btnResp2.ForeColor = Color.White;
                 btnResp1.BackColor = btnResp3.BackColor = btnResp4.BackColor = Color.Gray;
-            } else if( respSeleccionada == 3)
+            } else if( respSeleccionada == 2)
             {
-                btnResp3.Enabled = false;
+                btnResp3.ForeColor = Color.White;
                 btnResp1.BackColor = btnResp2.BackColor = btnResp4.BackColor = Color.Gray;
-            } else if (respSeleccionada == 4)
+            } else if (respSeleccionada == 3)
             {
-                btnResp4.Enabled = false;
+                btnResp4.ForeColor = Color.White;
                 btnResp1.BackColor = btnResp2.BackColor = btnResp3.BackColor = Color.Gray;
             }
             else
@@ -114,6 +127,15 @@ namespace BrainZap_Client.FORMULARIOS
                 btnResp1.Enabled = btnResp2.Enabled = btnResp3.Enabled = btnResp4.Enabled = false;
                 btnResp1.BackColor = btnResp2.BackColor = btnResp3.BackColor = btnResp4.BackColor = Color.Gray;
             }
+        }
+
+        private void desbloquearRespuestas()
+        {
+            btnResp1.Enabled = btnResp2.Enabled = btnResp3.Enabled = btnResp4.Enabled = true;
+            btnResp1.BackColor = Color.Red;
+            btnResp2.BackColor = Color.Blue;
+            btnResp3.BackColor = Color.Yellow;
+            btnResp4.BackColor = Color.Green;
         }
 
         private void enviarRespuesta(int indice)
@@ -138,6 +160,34 @@ namespace BrainZap_Client.FORMULARIOS
 
             enviarRespuesta(respSeleccionada);
         }
+
+        private void onResultadoRecibido(string mensaje)
+        {
+            this.Invoke(new Action(() =>
+            {
+                // Formato: RESULTADO|nick|CORRECTO|puntosGanados|nick1:puntos1,nick2:puntos2,nick3:puntos3
+                string[] partes = mensaje.Split('|');
+                if (partes.Length >= 5)
+                {
+                    string estado = partes[2]; // CORRECTO o INCORRECTO
+                    bool acierto = estado == "CORRECTO";
+                    int puntosGanados = int.TryParse(partes[3], out int puntos) ? puntos : 0;
+                    string[] top3 = partes[4].Split(',');
+
+                    frmResultadoActual = new FrmResultado(jugador, socket, acierto, puntosGanados, top3);
+                    frmResultadoActual.FormClosed += (s, args) =>
+                    {
+                        this.Show(); // Volver a mostrar FrmPregunta al cerrarse el resultado
+                        frmResultadoActual = null; // Liberamos referencia
+                    };
+
+                    this.Hide(); // Ocultamos FrmPregunta mientras se ve el resultado
+                    frmResultadoActual.Show();
+
+                }
+            }));
+        }
+
     }
 }
 
