@@ -11,7 +11,7 @@ namespace BrainZap_Client.CLASSES
 {
     public class ClSocketClient
     {
-        const String CERTIFICAT = @"C:\Users\Usuario\Documents\Educem\DAM\M9\elMeuCertificat.pfx";
+        const String CERTIFICAT = "elMeuCertificat.pfx";
         const String psw = "Educem00.";
         private TcpListener servidorLocal;
         private TcpClient cliente;

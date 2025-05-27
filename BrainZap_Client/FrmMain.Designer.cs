@@ -68,9 +68,9 @@ namespace BrainZap_Client
             this.lbIp.AutoSize = true;
             this.lbIp.Location = new System.Drawing.Point(220, 180);
             this.lbIp.Name = "lbIp";
-            this.lbIp.Size = new System.Drawing.Size(25, 23);
+            this.lbIp.Size = new System.Drawing.Size(53, 23);
             this.lbIp.TabIndex = 3;
-            this.lbIp.Text = "IP";
+            this.lbIp.Text = "IP Srv";
             // 
             // tbNickname
             // 
