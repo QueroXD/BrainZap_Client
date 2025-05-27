@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -9,16 +11,22 @@ namespace BrainZap_Client.CLASSES
 {
     public class ClSocketClient
     {
+        const String CERTIFICAT = @"C:\Users\Usuario\Documents\Educem\DAM\M9\elMeuCertificat.pfx";
+        const String psw = "Educem00.";
         private TcpListener servidorLocal;
         private TcpClient cliente;
-        private NetworkStream stream;
+        private SslStream stream;
         private Thread threadEscucha;
         private bool conectado = false;
+        private string ip;
+        private int puerto;
+
+        X509Certificate2 elMeuCertificat = new X509Certificate2(CERTIFICAT, psw);
 
         public event Action<string> PreguntaRecibida;
         public event Action<string> ResultadoRecibido;
         public event Action<string> FinPartidaRecibido;
-
+            
         public bool Conectado => conectado;
 
         public void iniciarEscucha()
@@ -40,11 +48,13 @@ namespace BrainZap_Client.CLASSES
 
         public bool conectar(string nickname, string ip, int puerto)
         {
+            this.ip = ip;
+            this.puerto = puerto;
             try
             {
                 cliente = new TcpClient();
                 cliente.Connect(ip, puerto);
-                stream = cliente.GetStream();
+                stream = new SslStream(cliente.GetStream(), false, validarCertificat);
 
                 conectado = true;
 
@@ -86,9 +96,9 @@ namespace BrainZap_Client.CLASSES
                     if (servidorLocal.Pending())
                     {
                         TcpClient clienteLocal = servidorLocal.AcceptTcpClient();  // Aceptamos la conexión
-                        NetworkStream streamLocal = clienteLocal.GetStream();  // Obtenemos el stream
+                        SslStream sslStream = new SslStream(clienteLocal.GetStream(), false);
 
-                        recibirMensaje(streamLocal, buffer);
+                        recibirMensaje(sslStream, buffer);
                     }
                 }
             }
@@ -102,18 +112,34 @@ namespace BrainZap_Client.CLASSES
         {
             try
             {
+                if (cliente == null)
+                {
+                    cliente = new TcpClient();
+                    cliente.Connect(ip, puerto);
+                }
+
                 byte[] datos = Encoding.UTF8.GetBytes(mensaje + "\n");
-                stream.Write(datos, 0, datos.Length);
-                
-            } catch (Exception ex) {
+                stream = new SslStream(cliente.GetStream(), false, validarCertificat);
+
+                stream.AuthenticateAsClient(ip);
+                if (stream.CanWrite)
+                {
+                    stream.Write(System.Text.Encoding.Default.GetBytes(mensaje), 0, mensaje.Length);
+
+                }
+            }
+            catch (Exception ex)
+            {
                 gestionarMensaje("ERROR|" + ex.Message);
             }
         }
 
-        public void recibirMensaje(NetworkStream stream, byte[] buffer)
+        public void recibirMensaje(SslStream stream, byte[] buffer)
         {
             try
             {
+                stream.AuthenticateAsServer(elMeuCertificat);
+
                 int bytesLeidos = stream.Read(buffer, 0, buffer.Length);
 
                 if (bytesLeidos > 0)
@@ -130,7 +156,7 @@ namespace BrainZap_Client.CLASSES
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al recibir mensaje: {ex.Message}");
+                MessageBox.Show($"Error al recibir mensaje: {ex.Message}");
             }
         }
 
@@ -192,6 +218,11 @@ namespace BrainZap_Client.CLASSES
                 cliente?.Close();
             }
             catch { }
+        }
+
+        private bool validarCertificat(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
         }
     }
 }

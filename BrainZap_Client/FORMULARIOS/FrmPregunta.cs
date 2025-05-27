@@ -135,7 +135,8 @@ namespace BrainZap_Client.FORMULARIOS
             btnResp1.Enabled = btnResp2.Enabled = btnResp3.Enabled = btnResp4.Enabled = true;
             btnResp1.BackColor = Color.Red;
             btnResp2.BackColor = Color.Blue;
-            btnResp3.BackColor = Color.Yellow;
+            btnResp3.BackColor = Color.Gold;
+            btnResp1.ForeColor = Color.Black;
             btnResp4.BackColor = Color.Green;
         }
 
@@ -196,6 +197,7 @@ namespace BrainZap_Client.FORMULARIOS
             frmResultadoActual?.Invoke(new Action(() =>
             {
                 this.Hide(); // Ocultamos FrmPregunta
+                frmResultadoActual.Hide();
                 frmFinal = new FrmFinal(socket, top3); // Creando el formulario de fin de partida
                 frmFinal.FormClosed += (s, e) => Application.Exit(); // Al cerrar el formulario de fin de partida, cerramos la aplicación
                 frmFinal.Show(); // Mostramos el formulario de fin de partida
